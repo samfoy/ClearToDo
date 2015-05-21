@@ -13,6 +13,9 @@
 		2290F50C1B0D9D7500A0EACF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2290F50B1B0D9D7500A0EACF /* Images.xcassets */; };
 		2290F50F1B0D9D7500A0EACF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2290F50D1B0D9D7500A0EACF /* LaunchScreen.xib */; };
 		2290F51B1B0D9D7500A0EACF /* ClearToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F51A1B0D9D7500A0EACF /* ClearToDoTests.swift */; };
+		2290F5251B0D9E8200A0EACF /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5241B0D9E8200A0EACF /* ToDoItem.swift */; };
+		2290F5271B0DA84700A0EACF /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5261B0DA84700A0EACF /* TableViewCell.swift */; };
+		2290F5291B0DB29700A0EACF /* StrikeThroughText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5281B0DB29700A0EACF /* StrikeThroughText.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 		2290F5141B0D9D7500A0EACF /* ClearToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClearToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2290F5191B0D9D7500A0EACF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2290F51A1B0D9D7500A0EACF /* ClearToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearToDoTests.swift; sourceTree = "<group>"; };
+		2290F5241B0D9E8200A0EACF /* ToDoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
+		2290F5261B0DA84700A0EACF /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		2290F5281B0DB29700A0EACF /* StrikeThroughText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrikeThroughText.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +85,9 @@
 			children = (
 				2290F5041B0D9D7500A0EACF /* AppDelegate.swift */,
 				2290F5061B0D9D7500A0EACF /* ViewController.swift */,
+				2290F5261B0DA84700A0EACF /* TableViewCell.swift */,
+				2290F5241B0D9E8200A0EACF /* ToDoItem.swift */,
+				2290F5281B0DB29700A0EACF /* StrikeThroughText.swift */,
 				2290F5081B0D9D7500A0EACF /* Main.storyboard */,
 				2290F50B1B0D9D7500A0EACF /* Images.xcassets */,
 				2290F50D1B0D9D7500A0EACF /* LaunchScreen.xib */,
@@ -212,8 +221,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2290F5291B0DB29700A0EACF /* StrikeThroughText.swift in Sources */,
 				2290F5071B0D9D7500A0EACF /* ViewController.swift in Sources */,
+				2290F5271B0DA84700A0EACF /* TableViewCell.swift in Sources */,
 				2290F5051B0D9D7500A0EACF /* AppDelegate.swift in Sources */,
+				2290F5251B0D9E8200A0EACF /* ToDoItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +421,7 @@
 				2290F5201B0D9D7500A0EACF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2290F5211B0D9D7500A0EACF /* Build configuration list for PBXNativeTarget "ClearToDoTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +430,7 @@
 				2290F5231B0D9D7500A0EACF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
