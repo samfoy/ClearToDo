@@ -11,6 +11,8 @@ import QuartzCore
 
 protocol TableViewCellDelegate {
     func toDoItemDeleted(toDoItem: ToDoItem)
+    func cellDidBeginEditing(editingCell: TableViewCell)
+    func cellDidEndEditing(editingCell: TableViewCell)
 }
 
 class TableViewCell: UITableViewCell, UITextFieldDelegate {
@@ -170,6 +172,15 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
     func textFieldDidEndEditing(textField: UITextField) {
         if toDoItem != nil {
             toDoItem!.text = textField.text
+        }
+        if delegate != nil {
+            delegate!.cellDidEndEditing(self)
+        }
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        if delegate != nil {
+            delegate!.cellDidBeginEditing(self)
         }
     }
 

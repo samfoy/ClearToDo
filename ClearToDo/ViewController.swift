@@ -67,6 +67,34 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell
     }
     
+    //MARK: - add, delete, edit methods
+    
+    func cellDidBeginEditing(editingCell: TableViewCell) {
+        var editingOffset = tableView.contentOffset.y - editingCell.frame.origin.y as CGFloat
+        let visibleCells = tableView.visibleCells() as! [TableViewCell]
+        for cell in visibleCells {
+            UIView.animateWithDuration(0.3, animations: {() in cell.transform = CGAffineTransformMakeTranslation(0, editingOffset)
+                if cell != editingCell {
+                    cell.alpha = 0.3
+                }
+            })
+        }
+    }
+    
+    func cellDidEndEditing(editingCell: TableViewCell) {
+        let visibleCells = tableView.visibleCells() as! [TableViewCell]
+        for cell: TableViewCell in visibleCells {
+            UIView.animateWithDuration(0.3, animations: {() in cell.transform = CGAffineTransformIdentity
+                if cell !== editingCell {
+                    cell.alpha = 1.0
+                }
+            })
+        }
+        if editingCell.toDoItem!.text == "" {
+            toDoItemDeleted(editingCell.toDoItem!)
+        }
+    }
+    
     func toDoItemDeleted(toDoItem: ToDoItem) {
         let index = (toDoItems as NSArray).indexOfObject(toDoItem)
         if index == NSNotFound { return }
@@ -109,7 +137,56 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.endUpdates()
     }
     
-    // MARK: - Table view delegate
+    func toDoItemAdded() {
+        let toDoItem = ToDoItem(text: "")
+        toDoItems.insert(toDoItem, atIndex: 0)
+        tableView.reloadData()
+        
+        var editCell: TableViewCell
+        let visibleCells = tableView.visibleCells() as! [TableViewCell]
+        for cell in visibleCells {
+            if (cell.toDoItem === toDoItem) {
+                editCell = cell
+                editCell.label.becomeFirstResponder()
+                break
+            }
+        }
+    }
+    
+    // MARK: - UIScrollViewDelegate methods
+    let placeHolderCell = TableViewCell(style: .Default, reuseIdentifier: "cell")
+    var pullDownInProgress = false
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        pullDownInProgress = scrollView.contentOffset.y  <= 0.0
+        placeHolderCell.backgroundColor = UIColor.redColor()
+        if pullDownInProgress {
+            tableView.insertSubview(placeHolderCell, atIndex: 0)
+        }
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        var scrollViewContentOffSetY = scrollView.contentOffset.y
+        
+        if pullDownInProgress && scrollView.contentOffset.y <= 0.0 {
+            placeHolderCell.frame = CGRect(x:0, y: -tableView.rowHeight, width: tableView.frame.size.width, height: tableView.rowHeight)
+            placeHolderCell.label.text = -scrollViewContentOffSetY > tableView.rowHeight ?
+                "Release to add item" : "Pull to add item"
+            placeHolderCell.alpha = min(1.0, -scrollViewContentOffSetY / tableView.rowHeight)
+        } else {
+            pullDownInProgress = false
+        }
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if pullDownInProgress && -scrollView.contentOffset.y > tableView.rowHeight {
+            toDoItemAdded()
+        }
+        pullDownInProgress = false
+        placeHolderCell.removeFromSuperview()
+    }
+    
+    // MARK: - TableViewDelegate methods
     
     func colorForIndex(index: Int) -> UIColor {
         let itemCount = toDoItems.count - 1
