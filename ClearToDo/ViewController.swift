@@ -16,6 +16,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var toDoItems = [ToDoItem]()
     
     let pinchRecognizer = UIPinchGestureRecognizer()
+    let longPressRecognizer = UILongPressGestureRecognizer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,12 +24,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         pinchRecognizer.addTarget(self, action: "handlePinch:")
         tableView.addGestureRecognizer(pinchRecognizer)
         
+        longPressRecognizer.addTarget(self, action: "handleLongPress:")
+        longPressRecognizer.minimumPressDuration = 0.5
+        tableView.addGestureRecognizer(longPressRecognizer)
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.separatorStyle = .None
         tableView.backgroundColor = UIColor.blackColor()
         tableView.rowHeight = 50.0
+        tableView.userInteractionEnabled = true
         // Do any additional setup after loading the view, typically from a nib.
         
         if toDoItems.count > 0 {
@@ -148,6 +154,97 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
         }
     }
+    
+    //MARK: - reorder methods
+    var longPressLocation: CGPoint!
+    var indexPath: NSIndexPath!
+    var cellSnapshot: UIView!
+    var initialIndexPath: NSIndexPath!
+    
+    func handleLongPress(recognizer: UILongPressGestureRecognizer) {
+        switch recognizer.state {
+        case .Began:
+            longPressStarted(recognizer)
+        case .Changed:
+            longPressChanged(recognizer)
+        default:
+            longPressUnchanged(recognizer)
+        }
+    }
+    
+    func longPressStarted(recognizer: UILongPressGestureRecognizer) {
+        longPressLocation = recognizer.locationInView(tableView)
+        indexPath = tableView.indexPathForRowAtPoint(longPressLocation)
+        initialIndexPath = indexPath
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TableViewCell
+        cellSnapshot = snapShot(cell)
+        var center = cell.center
+        cellSnapshot.center = center
+        cellSnapshot.alpha = 0.0
+        tableView.addSubview(cellSnapshot)
+        
+        UIView.animateWithDuration(0.2, animations: {
+            () in center.y = self.longPressLocation.y
+            self.cellSnapshot.center = center
+            self.cellSnapshot.transform = CGAffineTransformMakeScale(1.05,1.05)
+            self.cellSnapshot.alpha = 0.95
+            cell.alpha = 0.0
+            }, completion: {
+                (finished) in
+                if finished {
+                    cell.hidden = true
+                }
+        })
+    }
+    
+    func longPressChanged(recognizer: UILongPressGestureRecognizer) {
+        longPressLocation = recognizer.locationInView(tableView)
+        indexPath = tableView.indexPathForRowAtPoint(longPressLocation)
+        var center = cellSnapshot.center
+        center.y = longPressLocation.y
+        cellSnapshot.center = center
+        
+        if indexPath != nil && indexPath != initialIndexPath {
+            swap(&toDoItems[indexPath.row], &toDoItems[initialIndexPath.row])
+            tableView.moveRowAtIndexPath(initialIndexPath, toIndexPath: indexPath)
+            initialIndexPath = indexPath
+            tableView.reloadData()
+        }
+    }
+    
+    func longPressUnchanged(recognizer: UILongPressGestureRecognizer) {
+        let cell = tableView.cellForRowAtIndexPath(initialIndexPath) as! TableViewCell
+        cell.hidden = false
+        cell.alpha = 0.0
+        UIView.animateWithDuration(0.2, animations: {
+            () in self.cellSnapshot.center = cell.center
+            self.cellSnapshot.transform = CGAffineTransformIdentity
+            self.cellSnapshot.alpha = 0.0
+            cell.alpha = 1.0
+            }, completion: {
+                (finished) in
+                if finished {
+                    self.initialIndexPath = nil
+                    self.cellSnapshot.removeFromSuperview()
+                    self.cellSnapshot = nil
+                }
+        })
+    }
+    
+    func snapShot(inputView: UIView) -> UIView {
+        UIGraphicsBeginImageContextWithOptions(inputView.bounds.size, false, 0.0)
+        inputView.layer.renderInContext(UIGraphicsGetCurrentContext())
+        let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage
+        UIGraphicsEndImageContext()
+        let snapShot: UIView = UIImageView(image: image)
+        snapShot.layer.masksToBounds = false
+        snapShot.layer.cornerRadius = 0.0
+        snapShot.layer.shadowOffset = CGSizeMake(-5.0, 0.0)
+        snapShot.layer.shadowRadius = 5.0
+        snapShot.layer.shadowOpacity = 0.3
+        return snapShot
+    }
+    
     
     // MARK: - pinch-to-add methods
     
@@ -309,7 +406,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func colorForIndex(index: Int) -> UIColor {
         let itemCount = toDoItems.count - 1
-        let val = (CGFloat(index) / CGFloat(itemCount)) * 0.6
+        var val = (CGFloat(index) / CGFloat(itemCount)) * 0.6
+        if itemCount == 0 {
+            val = 0.0
+        }
         return UIColor(red: 1.0, green: val, blue: 0.0, alpha: 1.0)
     }
     

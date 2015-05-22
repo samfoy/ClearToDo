@@ -25,7 +25,6 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
     
     var tickLabel: UILabel!, crossLabel: UILabel!
     
-    
     let label: StrikeThroughText
     var itemCompleteLayer = CALayer()
     
@@ -47,7 +46,6 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
         label.textColor = UIColor.whiteColor()
         label.font = UIFont.boldSystemFontOfSize(16)
         label.backgroundColor = UIColor.clearColor()
-        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         label.delegate = self
