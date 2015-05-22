@@ -77,6 +77,7 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
         addSubview(crossLabel)
         
         itemCompleteLayer = CALayer(layer: layer)
+        itemCompleteLayer.hidden = true
         itemCompleteLayer.backgroundColor = UIColor(red: 0.0, green: 0.6, blue: 0.0, alpha: 1.0).CGColor
         layer.insertSublayer(itemCompleteLayer, atIndex: 0)
         

@@ -15,14 +15,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     var toDoItems = [ToDoItem]()
     
-    var itemCount: Int {
-        get {
-            return toDoItems.count - 1
-        }
-    }
+    let pinchRecognizer = UIPinchGestureRecognizer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        pinchRecognizer.addTarget(self, action: "handlePinch:")
+        tableView.addGestureRecognizer(pinchRecognizer)
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "cell")
@@ -34,18 +34,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if toDoItems.count > 0 {
             return
         }
-        toDoItems.append(ToDoItem(text: "feed the cat"))
-        toDoItems.append(ToDoItem(text: "buy eggs"))
-        toDoItems.append(ToDoItem(text: "watch WWDC videos"))
-        toDoItems.append(ToDoItem(text: "rule the Web"))
-        toDoItems.append(ToDoItem(text: "buy a new iPhone"))
-        toDoItems.append(ToDoItem(text: "darn holes in socks"))
-        toDoItems.append(ToDoItem(text: "write this tutorial"))
-        toDoItems.append(ToDoItem(text: "master Swift"))
-        toDoItems.append(ToDoItem(text: "learn to draw"))
-        toDoItems.append(ToDoItem(text: "get more exercise"))
-        toDoItems.append(ToDoItem(text: "catch up with Mom"))
-        toDoItems.append(ToDoItem(text: "get a hair cut"))
+        toDoItems.append(ToDoItem(text: "Swipe left to delete"))
+        toDoItems.append(ToDoItem(text: "Swipe right to complete"))
+        toDoItems.append(ToDoItem(text: "Pull down to add to the top"))
+        toDoItems.append(ToDoItem(text: "Pinch apart to add between"))
     }
     
     // MARK: - Table view data source
@@ -138,8 +130,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func toDoItemAdded() {
+        toDoItemAddedAtIndex(0)
+    }
+    
+    func toDoItemAddedAtIndex(index: Int) {
         let toDoItem = ToDoItem(text: "")
-        toDoItems.insert(toDoItem, atIndex: 0)
+        toDoItems.insert(toDoItem, atIndex: index)
         tableView.reloadData()
         
         var editCell: TableViewCell
@@ -151,6 +147,129 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 break
             }
         }
+    }
+    
+    // MARK: - pinch-to-add methods
+    
+    var pinchInProgress = false
+    
+    struct TouchPoints {
+        var upper: CGPoint
+        var lower: CGPoint
+    }
+    
+    var upperCellIndex = -100
+    var lowerCellIndex = -100
+    
+    var initialTouchPoints: TouchPoints!
+    var pinchExceededRequiredDistance = false
+    
+    func handlePinch(recognizer: UIPinchGestureRecognizer) {
+        if recognizer.state == .Began {
+            pinchStarted(recognizer)
+        }
+        if recognizer.state == .Changed && pinchInProgress && recognizer.numberOfTouches() == 2 {
+            pinchChanged(recognizer)
+        }
+        if recognizer.state == .Ended {
+            pinchEnded(recognizer)
+        }
+    }
+    
+    func pinchStarted(recognizer: UIPinchGestureRecognizer) {
+        initialTouchPoints = getNormalizedTouchPoints(recognizer)
+        
+        upperCellIndex = -100
+        lowerCellIndex = -100
+        let visibleCells = tableView.visibleCells() as! [TableViewCell]
+        for i in 0..<visibleCells.count {
+            let cell = visibleCells[i]
+            if viewContainsPoint(cell, point: initialTouchPoints.upper) {
+                upperCellIndex = i
+            }
+            if viewContainsPoint(cell, point: initialTouchPoints.lower) {
+                lowerCellIndex = i
+            }
+        }
+        
+        if abs(upperCellIndex - lowerCellIndex) == 1 {
+            pinchInProgress = true
+            let precedingCell = visibleCells[upperCellIndex]
+            placeHolderCell.frame = CGRectOffset(precedingCell.frame, 0.0, tableView.rowHeight / 2.0)
+            placeHolderCell.backgroundColor = precedingCell.backgroundColor
+            tableView.insertSubview(placeHolderCell, atIndex: 0)
+        }
+    }
+    
+    func pinchChanged(recognizer: UIPinchGestureRecognizer) {
+        let currentTouchPoints = getNormalizedTouchPoints(recognizer)
+        
+        let upperDelta = currentTouchPoints.upper.y - initialTouchPoints.upper.y
+        let lowerDelta = initialTouchPoints.lower.y - currentTouchPoints.lower.y
+        let delta = -min(0, min(upperDelta, lowerDelta))
+        
+        let visibleCells = tableView.visibleCells() as! [TableViewCell]
+        for i in 0..<visibleCells.count {
+            let cell = visibleCells[i]
+            if i <= upperCellIndex {
+                cell.transform = CGAffineTransformMakeTranslation(0, -delta)
+            }
+            if i >= lowerCellIndex {
+                cell.transform = CGAffineTransformMakeTranslation(0, delta)
+            }
+        }
+        
+        let gapSize = delta * 2
+        let cappedGapSize = min(gapSize, tableView.rowHeight)
+        let precedingCell = visibleCells[upperCellIndex]
+        placeHolderCell.transform = CGAffineTransformMakeScale(1.0, cappedGapSize / tableView.rowHeight)
+        placeHolderCell.label.text = gapSize > tableView.rowHeight ? "Release to add item" : "Pull apart to add item"
+        placeHolderCell.alpha = min(1.0, gapSize / tableView.rowHeight)
+        
+        pinchExceededRequiredDistance = gapSize > tableView.rowHeight
+    }
+    
+    func pinchEnded(recognizer: UIPinchGestureRecognizer) {
+        pinchInProgress = false
+        
+        placeHolderCell.transform = CGAffineTransformIdentity
+        placeHolderCell.removeFromSuperview()
+        
+        if pinchExceededRequiredDistance {
+            pinchExceededRequiredDistance = false
+            
+            let visibleCells = self.tableView.visibleCells() as! [TableViewCell]
+            for cell in visibleCells {
+                cell.transform = CGAffineTransformIdentity
+            }
+            let indexOffset = Int(floor(tableView.contentOffset.y / tableView.rowHeight))
+            toDoItemAddedAtIndex(lowerCellIndex + indexOffset)
+        } else {
+            UIView.animateWithDuration(0.2, delay: 0.0, options: .CurveEaseInOut, animations: {() in let visibleCells = self.tableView.visibleCells() as! [TableViewCell]
+                for cell in visibleCells {
+                    cell.transform = CGAffineTransformIdentity
+                }}, completion: nil)
+        }
+        
+    
+        
+        
+    }
+    
+    func getNormalizedTouchPoints(recognizer: UIGestureRecognizer) -> TouchPoints {
+        var pointOne = recognizer.locationOfTouch(0, inView: tableView)
+        var pointTwo = recognizer.locationOfTouch(1, inView: tableView)
+        if pointOne.y > pointTwo.y {
+            let temp = pointOne
+            pointOne = pointTwo
+            pointTwo = temp
+        }
+        return TouchPoints(upper: pointOne,lower: pointTwo)
+    }
+    
+    func viewContainsPoint(view: UIView, point: CGPoint) -> Bool {
+        let frame = view.frame
+        return (frame.origin.y < point.y) && (frame.origin.y + (frame.size.height) > point.y)
     }
     
     // MARK: - UIScrollViewDelegate methods
