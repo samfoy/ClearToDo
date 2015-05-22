@@ -76,7 +76,7 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
         
         itemCompleteLayer = CALayer(layer: layer)
         itemCompleteLayer.hidden = true
-        itemCompleteLayer.backgroundColor = UIColor(red: 0.0, green: 0.6, blue: 0.0, alpha: 1.0).CGColor
+        itemCompleteLayer.backgroundColor = UIColor(red: 0.6, green: 0.0, blue: 0.6, alpha: 1.0).CGColor
         layer.insertSublayer(itemCompleteLayer, atIndex: 0)
         
         var recognizer = UIPanGestureRecognizer(target: self, action: "handlePan:")

@@ -40,7 +40,7 @@ class StrikeThroughText: UITextField {
         resizeStrikeThrough()
     }
     
-    let kStrikeOutThickness: CGFloat = 2.0
+    let kStrikeOutThickness: CGFloat = 1.0
     
     func resizeStrikeThrough() {
         let textSize = text!.sizeWithAttributes([NSFontAttributeName: font])
