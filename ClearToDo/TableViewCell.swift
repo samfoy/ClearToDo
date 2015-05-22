@@ -85,12 +85,13 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
     }
 
     let kLabelLeftMargin: CGFloat = 15.0
+    let kLabelTopMargin: CGFloat = 10.0
     let kUICuesMargin: CGFloat = 10.0, kUICuesWidth: CGFloat = 50.0
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer.frame = bounds
         itemCompleteLayer.frame = bounds
-        label.frame = CGRect(x: kLabelLeftMargin, y: 0, width: bounds.size.width - kLabelLeftMargin, height: bounds.size.height)
+        label.frame = CGRect(x: kLabelLeftMargin, y: kLabelTopMargin, width: bounds.size.width - (kLabelLeftMargin * 2), height: bounds.size.height - (2 * kLabelTopMargin))
         
         tickLabel.frame = CGRect(x: -kUICuesWidth - kUICuesMargin, y: 0, width: kUICuesWidth, height: bounds.size.height)
         crossLabel.frame = CGRect(x: bounds.size.width + kUICuesMargin, y: 0, width: kUICuesWidth, height: bounds.size.height)

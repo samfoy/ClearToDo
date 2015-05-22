@@ -26,6 +26,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         longPressRecognizer.addTarget(self, action: "handleLongPress:")
         longPressRecognizer.minimumPressDuration = 0.5
+        longPressRecognizer.delaysTouchesBegan = true
         tableView.addGestureRecognizer(longPressRecognizer)
         
         tableView.dataSource = self
@@ -362,7 +363,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
         pullDownInProgress = scrollView.contentOffset.y  <= 0.0
-        placeHolderCell.backgroundColor = UIColor.redColor()
+        placeHolderCell.backgroundColor = UIColor.blueColor()
         if pullDownInProgress {
             tableView.insertSubview(placeHolderCell, atIndex: 0)
         }
@@ -396,7 +397,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if itemCount == 0 {
             val = 0.0
         }
-        return UIColor(red: 1.0, green: val, blue: 0.0, alpha: 1.0)
+        return UIColor(red: 0.0, green: val, blue: 1.0, alpha: 1.0)
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
