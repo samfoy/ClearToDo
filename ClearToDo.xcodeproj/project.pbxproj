@@ -16,6 +16,7 @@
 		2290F5251B0D9E8200A0EACF /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5241B0D9E8200A0EACF /* ToDoItem.swift */; };
 		2290F5271B0DA84700A0EACF /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5261B0DA84700A0EACF /* TableViewCell.swift */; };
 		2290F5291B0DB29700A0EACF /* StrikeThroughText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5281B0DB29700A0EACF /* StrikeThroughText.swift */; };
+		22A2BE6E1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22A2BE6C1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		2290F5241B0D9E8200A0EACF /* ToDoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		2290F5261B0DA84700A0EACF /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		2290F5281B0DB29700A0EACF /* StrikeThroughText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrikeThroughText.swift; sourceTree = "<group>"; };
+		22A2BE6D1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ClearToDoData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				2290F5081B0D9D7500A0EACF /* Main.storyboard */,
 				2290F50B1B0D9D7500A0EACF /* Images.xcassets */,
 				2290F50D1B0D9D7500A0EACF /* LaunchScreen.xib */,
+				22A2BE6C1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodeld */,
 				2290F5021B0D9D7500A0EACF /* Supporting Files */,
 			);
 			path = ClearToDo;
@@ -222,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2290F5291B0DB29700A0EACF /* StrikeThroughText.swift in Sources */,
+				22A2BE6E1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodeld in Sources */,
 				2290F5071B0D9D7500A0EACF /* ViewController.swift in Sources */,
 				2290F5271B0DA84700A0EACF /* TableViewCell.swift in Sources */,
 				2290F5051B0D9D7500A0EACF /* AppDelegate.swift in Sources */,
@@ -435,6 +439,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		22A2BE6C1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				22A2BE6D1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodel */,
+			);
+			currentVersion = 22A2BE6D1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodel */;
+			path = ClearToDoData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2290F4F71B0D9D7500A0EACF /* Project object */;
 }
