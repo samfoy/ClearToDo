@@ -154,7 +154,7 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
         return false
     }
     
-    //MARK: - UITextFieldDelegate Methods
+    // MARK: - UITextFieldDelegate Methods
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()

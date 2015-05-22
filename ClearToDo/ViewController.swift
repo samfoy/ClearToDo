@@ -65,7 +65,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell
     }
     
-    //MARK: - add, delete, edit methods
+    // MARK: - add, delete, edit methods
     
     func cellDidBeginEditing(editingCell: TableViewCell) {
         var editingOffset = tableView.contentOffset.y - editingCell.frame.origin.y as CGFloat
@@ -98,14 +98,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if index == NSNotFound { return }
         
         toDoItems.removeAtIndex(index)
-        
-//        //animate
-//        tableView.beginUpdates()
-//        let indexPathForRow = NSIndexPath(forRow: index, inSection: 0)
-//        tableView.deleteRowsAtIndexPaths([indexPathForRow], withRowAnimation: .Fade)
-//        tableView.endUpdates()
-        
-        // new animation
+    
         let visibleCells = tableView.visibleCells() as! [TableViewCell]
         let lastView = visibleCells[visibleCells.count - 1] as TableViewCell
         var delay = 0.0
@@ -155,7 +148,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
-    //MARK: - reorder methods
+    // MARK: - reorder methods
     var longPressLocation: CGPoint!
     var indexPath: NSIndexPath!
     var cellSnapshot: UIView!
@@ -245,9 +238,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return snapShot
     }
     
-    
     // MARK: - pinch-to-add methods
-    
     var pinchInProgress = false
     
     struct TouchPoints {
@@ -347,10 +338,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     cell.transform = CGAffineTransformIdentity
                 }}, completion: nil)
         }
-        
-    
-        
-        
     }
     
     func getNormalizedTouchPoints(recognizer: UIGestureRecognizer) -> TouchPoints {
@@ -403,7 +390,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     // MARK: - TableViewDelegate methods
-    
     func colorForIndex(index: Int) -> UIColor {
         let itemCount = toDoItems.count - 1
         var val = (CGFloat(index) / CGFloat(itemCount)) * 0.6

@@ -17,6 +17,5 @@ class ToDoItem: NSObject {
     init(text: String) {
         self.text = text
         self.completed = false
-    }
-   
+    }   
 }
