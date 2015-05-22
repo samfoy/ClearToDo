@@ -17,6 +17,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     let pinchRecognizer = UIPinchGestureRecognizer()
     let longPressRecognizer = UILongPressGestureRecognizer()
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,10 +42,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if toDoItems.count > 0 {
             return
         }
-        toDoItems.append(ToDoItem(text: "Swipe left to delete"))
-        toDoItems.append(ToDoItem(text: "Swipe right to complete"))
-        toDoItems.append(ToDoItem(text: "Pull down to add to the top"))
-        toDoItems.append(ToDoItem(text: "Pinch apart to add between"))
+        
+        if !defaults.boolForKey("firstlaunch 1.0") {
+            defaults.setBool(true, forKey: "firstlaunch 1.0")
+            defaults.synchronize()
+            
+            toDoItems.append(ToDoItem(text: "Swipe left to delete"))
+            toDoItems.append(ToDoItem(text: "Swipe right to complete"))
+            toDoItems.append(ToDoItem(text: "Pull down to add to the top"))
+            toDoItems.append(ToDoItem(text: "Pinch apart to add between"))
+        }
+       
     }
     
     // MARK: - Table view data source
@@ -127,6 +135,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let indexPathForRow = NSIndexPath(forRow: index, inSection: 0)
         tableView.deleteRowsAtIndexPaths([indexPathForRow], withRowAnimation: .Fade)
         tableView.endUpdates()
+        tableView.reloadData()
     }
     
     func toDoItemAdded() {
@@ -375,7 +384,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if pullDownInProgress && scrollView.contentOffset.y <= 0.0 {
             placeHolderCell.frame = CGRect(x:0, y: -tableView.rowHeight, width: tableView.frame.size.width, height: tableView.rowHeight)
             placeHolderCell.label.text = -scrollViewContentOffSetY > tableView.rowHeight ?
-                "Release to add item" : "Pull to add item"
+                "Release to add item" : "Pull farther to add item"
             placeHolderCell.alpha = min(1.0, -scrollViewContentOffSetY / tableView.rowHeight)
         } else {
             pullDownInProgress = false
