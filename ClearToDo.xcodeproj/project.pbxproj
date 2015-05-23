@@ -17,6 +17,7 @@
 		2290F5271B0DA84700A0EACF /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5261B0DA84700A0EACF /* TableViewCell.swift */; };
 		2290F5291B0DB29700A0EACF /* StrikeThroughText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290F5281B0DB29700A0EACF /* StrikeThroughText.swift */; };
 		22A2BE6E1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22A2BE6C1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodeld */; };
+		22A2BE701B10034400EDCCA3 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 22A2BE6F1B10034400EDCCA3 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		2290F5261B0DA84700A0EACF /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		2290F5281B0DB29700A0EACF /* StrikeThroughText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrikeThroughText.swift; sourceTree = "<group>"; };
 		22A2BE6D1B0FE0D100EDCCA3 /* ClearToDoData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ClearToDoData.xcdatamodel; sourceTree = "<group>"; };
+		22A2BE6F1B10034400EDCCA3 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 		2290F4F61B0D9D7500A0EACF = {
 			isa = PBXGroup;
 			children = (
+				22A2BE6F1B10034400EDCCA3 /* .gitignore */,
 				2290F5011B0D9D7500A0EACF /* ClearToDo */,
 				2290F5171B0D9D7500A0EACF /* ClearToDoTests */,
 				2290F5001B0D9D7500A0EACF /* Products */,
@@ -204,6 +207,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22A2BE701B10034400EDCCA3 /* .gitignore in Resources */,
 				2290F50A1B0D9D7500A0EACF /* Main.storyboard in Resources */,
 				2290F50F1B0D9D7500A0EACF /* LaunchScreen.xib in Resources */,
 				2290F50C1B0D9D7500A0EACF /* Images.xcassets in Resources */,
