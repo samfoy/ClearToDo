@@ -48,11 +48,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if !defaults.boolForKey("firstlaunch 1.0") {
             defaults.setBool(true, forKey: "firstlaunch 1.0")
             defaults.synchronize()
-            
-//            toDoItems.append(ToDoItem(text: "Swipe left to delete"))
-//            toDoItems.append(ToDoItem(text: "Swipe right to complete"))
-//            toDoItems.append(ToDoItem(text: "Pull down to add to the top"))
-//            toDoItems.append(ToDoItem(text: "Pinch apart to add between"))
+
             toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Swipe left to delete"))
             toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Swipe right to complete"))
             toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Pull down to add to the top"))
