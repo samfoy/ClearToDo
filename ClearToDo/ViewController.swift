@@ -8,6 +8,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TableViewCellDelegate {
 
@@ -18,6 +19,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     let pinchRecognizer = UIPinchGestureRecognizer()
     let longPressRecognizer = UILongPressGestureRecognizer()
     let defaults = NSUserDefaults.standardUserDefaults()
+    let moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,11 +49,18 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             defaults.setBool(true, forKey: "firstlaunch 1.0")
             defaults.synchronize()
             
-            toDoItems.append(ToDoItem(text: "Swipe left to delete"))
-            toDoItems.append(ToDoItem(text: "Swipe right to complete"))
-            toDoItems.append(ToDoItem(text: "Pull down to add to the top"))
-            toDoItems.append(ToDoItem(text: "Pinch apart to add between"))
+//            toDoItems.append(ToDoItem(text: "Swipe left to delete"))
+//            toDoItems.append(ToDoItem(text: "Swipe right to complete"))
+//            toDoItems.append(ToDoItem(text: "Pull down to add to the top"))
+//            toDoItems.append(ToDoItem(text: "Pinch apart to add between"))
+            toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Swipe left to delete"))
+            toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Swipe right to complete"))
+            toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Pull down to add to the top"))
+            toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Pinch apart to add between"))
+            save()
         }
+        
+        fetchItems()
        
     }
     
@@ -71,7 +80,25 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.selectionStyle = .None
         cell.delegate = self
         cell.toDoItem = item
+        if item.completed {
+            cell.label.strikeThrough = true
+            cell.itemCompleteLayer.hidden = false
+        }
         return cell
+    }
+    
+    func fetchItems() {
+        let request = NSFetchRequest(entityName: "ToDoItem")
+        if let results = moc.executeFetchRequest(request, error: nil) as? [ToDoItem] {
+            toDoItems = results
+        }
+    }
+    
+    func save() {
+        var error: NSError?
+        if !moc.save(&error) {
+            NSLog("Unresolved error \(error), \(error!.userInfo)")
+        }
     }
     
     // MARK: - add, delete, edit methods
@@ -100,14 +127,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if editingCell.toDoItem!.text == "" {
             toDoItemDeleted(editingCell.toDoItem!)
         }
+        save()
     }
     
     func toDoItemDeleted(toDoItem: ToDoItem) {
         let index = (toDoItems as NSArray).indexOfObject(toDoItem)
         if index == NSNotFound { return }
-        
         toDoItems.removeAtIndex(index)
-    
+        moc.deleteObject(toDoItem)
+        
         let visibleCells = tableView.visibleCells() as! [TableViewCell]
         let lastView = visibleCells[visibleCells.count - 1] as TableViewCell
         var delay = 0.0
@@ -136,6 +164,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.deleteRowsAtIndexPaths([indexPathForRow], withRowAnimation: .Fade)
         tableView.endUpdates()
         tableView.reloadData()
+        save()
+    }
+    
+    func toDoItemCompleted(toDoItem: ToDoItem) {
+        save()
     }
     
     func toDoItemAdded() {
@@ -143,7 +176,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func toDoItemAddedAtIndex(index: Int) {
-        let toDoItem = ToDoItem(text: "")
+//        let toDoItem = ToDoItem(text: "")
+        let toDoItem = ToDoItem.createInManagedObjectContext(moc, text: "")
         toDoItems.insert(toDoItem, atIndex: index)
         tableView.reloadData()
         
@@ -156,6 +190,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 break
             }
         }
+        save()
     }
     
     // MARK: - reorder methods

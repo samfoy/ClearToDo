@@ -11,6 +11,7 @@ import QuartzCore
 
 protocol TableViewCellDelegate {
     func toDoItemDeleted(toDoItem: ToDoItem)
+    func toDoItemCompleted(toDoItem: ToDoItem)
     func cellDidBeginEditing(editingCell: TableViewCell)
     func cellDidEndEditing(editingCell: TableViewCell)
 }
@@ -134,6 +135,7 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
             } else if completeOnDragRelease {
                 if toDoItem != nil {
                     toDoItem!.completed = true
+                    delegate!.toDoItemCompleted(toDoItem!)
                 }
                 label.strikeThrough = true
                 itemCompleteLayer.hidden = false

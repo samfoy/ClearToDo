@@ -7,15 +7,19 @@
 //
 
 import UIKit
+import CoreData
 
-class ToDoItem: NSObject {
+class ToDoItem: NSManagedObject {
     
-    var text: String
+    @NSManaged var text: String
     
-    var completed: Bool
+    @NSManaged var completed: Bool
     
-    init(text: String) {
-        self.text = text
-        self.completed = false
-    }   
+    class func createInManagedObjectContext(moc: NSManagedObjectContext, text: String) -> ToDoItem {
+        let item = NSEntityDescription.insertNewObjectForEntityForName("ToDoItem", inManagedObjectContext: moc) as! ToDoItem
+        item.text = text
+        item.completed = false
+        return item
+    }
+    
 }
