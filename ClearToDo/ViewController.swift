@@ -53,6 +53,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Swipe right to complete"))
             toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Pull down to add to the top"))
             toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Pinch apart to add between"))
+            toDoItems.append(ToDoItem.createInManagedObjectContext(moc, text: "Hold and drag to reorder"))
             save()
         }
         
